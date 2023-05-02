@@ -1,0 +1,11 @@
+<h1>Here is the catalog page</h1>
+<h3>Take a look over our products</h3>
+
+
+{{#if products}}
+{{> listItem}}
+{{else}}
+<p>No products available</p>
+{{/if}}
+
+<a href="/catalog/create">Create page</a>
