@@ -1,5 +1,6 @@
 module.exports = {
-    home(req,res){
-     res.render('index',{ layout: false})   
+    async home(req, res){
+        const cars = await req.storage.getAllCars(req.query);
+       res.render('index', { cars , query:req.query});
     }
 }

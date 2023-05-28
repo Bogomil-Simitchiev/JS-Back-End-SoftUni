@@ -1,7 +1,11 @@
 module.exports = {
-    details(req,res){
-
-     console.log(req.params.id);
-     res.render('details',{ layout: false})   
+    async details(req,res){
+     const id = req.params.id;
+     const car = await req.storage.getCarById(id);
+     if (car) {
+        res.render('details', { car } );   
+     }else{
+        res.redirect('/404');
+     }
     }
 }

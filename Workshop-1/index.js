@@ -3,9 +3,10 @@ const hbs = require('express-handlebars');
 
 const { home } = require('./controllers/home');
 const { about } = require('./controllers/about');
-const { create } = require('./controllers/create');
 const { details } = require('./controllers/details');
 const { notFound } = require('./controllers/notFound');
+const carService = require('./services/carService');
+const createController = require('./controllers/create');
 
 const app = express();
 
@@ -17,10 +18,14 @@ app.set('view engine', 'hbs');
 
 app.use(express.urlencoded({ extended:true }));
 app.use('/static', express.static('static'));
+app.use(carService());
 
 app.get('/', home);
+
 app.get('/about' , about);
-app.get('/create' , create);
+
+app.use('/create' , createController);
+
 app.get('/details/:id' , details);
 
 app.all('*', notFound);

@@ -1,15 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/css/site.css" type="text/css">
-    <link rel="shortcut icon" href="/static/images/favicon.png" type="image/x-icon">
-
-    <title>Create page</title>
-</head>
-<body>
-    <h1>Hello from create page!</h1>
-</body>
-</html>
+<main>
+  <h1>Create</h1>
+  <div class="form">
+    <form action='/create' method="POST">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name">
+      <label for="name">Description</label>
+      <textarea id="name" name="description"></textarea>
+      <label for="image">ImageUrl</label>
+      <input type="text" id="image" name="imageUrl">
+      <label for="price">Price</label>
+      <input type="text" id="price" name="price">
+      <input type="submit" value="Create">
+    </form>
+  </div>
+</main>
