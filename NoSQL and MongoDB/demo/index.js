@@ -1,39 +1,27 @@
 const mongoose = require('mongoose');
 
+const Car = require('./models/Car.js');
+const Post = require('./models/Post.js');
+const Comment = require('./models/Comment.js');
+
 const connectionString = `mongodb://localhost:27017/testdb`;
-
-const carSchema = new mongoose.Schema({
-    name:String,
-    price:Number
-})
-
-carSchema.methods.startEngine = function(){
-    console.log(`${this.name} goes vroom!`);
-}
-
-const Car = mongoose.model('Car', carSchema);
 
 start();
 
-async function start(){
+async function start() {
     await mongoose.connect(connectionString, {
-        useUnifiedTopology:true,
-        useNewUrlParser:true
+        useUnifiedTopology: true,
+        useNewUrlParser: true
     });
 
     console.log('Database connected');
 
-    const car = new Car({
-        name:'Mercedes',
-        price:'12500'
-    })
+    // const post = await Post.findOne({});
+    // const comment = await Comment.findOne({});
 
-    await car.save();
+    // post.comments.push(comment);
 
-    const data = await Car.find({});
-    console.log(data);
+    const post = await Post.findOne({}).populate('comments');
+    console.log(post);
 
-    data.forEach(car=>{
-        car.startEngine();
-    })
 }
