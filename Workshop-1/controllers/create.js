@@ -6,7 +6,6 @@ router.get('/', (req, res) => {
     res.render('create');
 });
 
-
 router.post('/', async (req, res) => {
     const info = req.body;
     if (info.name != '' && info.description != '' && info.imageUrl != '' && info.price != '') {
@@ -14,11 +13,13 @@ router.post('/', async (req, res) => {
             name:info.name,
             description:info.description,
             imageUrl:info.imageUrl,
-            price: Number(info.price)
+            price: Number(info.price),
         }
 
         await req.storage.createCar(car);
         res.redirect('/');
+    }else{
+        res.redirect('/create');
     }
 });
 

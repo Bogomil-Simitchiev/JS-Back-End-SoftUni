@@ -49,10 +49,27 @@ async function getCarById(id) {
         return undefined;
     }
 }
+async function deleteCar(id) {
+    const data = await read();
+    if (data.hasOwnProperty(id)) {
+        delete data[id];
+        await write(data);
+    }else{
+        return undefined;
+    }
+
+}
+async function editCar(id, updatedCar){
+    const data = await read();
+    data[id] = updatedCar;
+    await write(data);
+}
+
 async function createCar(data){
     let cars = await read();
     const id = generateRandomId(12);
-    cars[id] = data
+    cars[id] = data;
+    cars[id].id = id;
    await write(cars);
 }
 
@@ -60,7 +77,9 @@ module.exports = () => (req, res, next) => {
     req.storage = {
         getAllCars,
         getCarById,
-        createCar
+        createCar,
+        deleteCar,
+        editCar
     }
 
     next();
