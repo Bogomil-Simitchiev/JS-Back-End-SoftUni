@@ -12,7 +12,6 @@ const createController = require('./controllers/create');
 const deleteController = require('./controllers/delete');
 const editController = require('./controllers/edit');
 
-
 const app = express();
 
 app.engine('hbs', hbs.create({
@@ -27,21 +26,13 @@ app.use(carService());
 
 app.get('/', home);
 app.get('/about', about);
+
 app.use('/create', createController);
-
-
-app.route('/delete/:id')
-    .get(deleteController.get)
-    .post(deleteController.post);
-
-app.route('/edit/:id')
-    .get(editController.get)
-    .post(editController.post);
+app.use('/delete', deleteController);
+app.use('/edit', editController);
 
 app.get('/details/:id', details);
 
-
 app.all('*', notFound);
-
 
 app.listen(3000, () => console.log('Server started on port 3000'));
