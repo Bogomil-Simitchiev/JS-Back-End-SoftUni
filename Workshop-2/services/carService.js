@@ -1,32 +1,25 @@
-const fs = require('fs/promises');
-const filePath = './services/data.json';
-const generateRandomId = require('../utils/utils');
 const Car = require('../models/Car');
-
-async function read() {
-    try {
-        const file = await fs.readFile(filePath);
-        return JSON.parse(file);
-    } catch (error) {
-        console.error("read error");
-        console.log(error);
-        process.exit(1);
-    }
-}
-
-async function write(data) {
-    try {
-        await fs.writeFile(filePath, JSON.stringify(data, null, 2));
-    } catch (error) {
-        console.error("write error");
-        console.log(error);
-        process.exit(1);
-    }
-}
 
 async function getAllCars(query) {
 
-    const cars = await Car.find({});
+    let options = {};
+
+    if (query.search) {
+        options.name = new RegExp(query.search, 'i');
+    }
+    if (query.from) {
+        options.price = { $gte: Number(query.from) };
+    }
+    if (query.to) {
+        if (!options.price) {
+            options.price = {};
+        }
+        options.price.$lte = Number(query.to);
+    }
+
+    console.log(options);
+    const cars = await Car.find(options);
+
     return cars.map(car => ({
         name: car.name,
         description: car.description,
@@ -35,20 +28,6 @@ async function getAllCars(query) {
         id: car._id
     }))
 
-    // const data = await read();
-    // let cars = Object.entries(data).map(([id, v]) => Object.assign({}, { id }, v));
-
-    // if (query.search) {
-    //    cars = cars.filter(c=>c.name.toLocaleLowerCase().includes(query.search.toLocaleLowerCase()));
-    // }
-    // if (query.from) {
-    //     cars = cars.filter(c=>c.price >= Number(query.from));
-    //  }
-    //  if (query.to) {
-    //     cars = cars.filter(c=>c.price < Number(query.to));
-    //  }
-
-    // return cars;
 }
 
 async function getCarById(id) {
@@ -65,28 +44,18 @@ async function getCarById(id) {
         return undefined;
     }
 }
-async function deleteCar(id) {
-    const data = await read();
-    if (data.hasOwnProperty(id)) {
-        delete data[id];
-        await write(data);
-    } else {
-        return undefined;
-    }
 
+async function deleteCar(id) {
+    await Car.findByIdAndDelete(id);
 }
+
 async function editCar(id, updatedCar) {
-    const data = await read();
-    data[id] = updatedCar;
-    await write(data);
+    await Car.findByIdAndUpdate(id, updatedCar);
 }
 
 async function createCar(data) {
-    let cars = await read();
-    const id = generateRandomId(12);
-    cars[id] = data;
-    cars[id].id = id;
-    await write(cars);
+    const car = new Car(data);
+    await car.save();
 }
 
 module.exports = () => (req, res, next) => {
@@ -97,6 +66,6 @@ module.exports = () => (req, res, next) => {
         deleteCar,
         editCar
     }
-
+    
     next();
 }
