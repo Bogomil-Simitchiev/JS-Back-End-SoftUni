@@ -10,7 +10,6 @@ function generateRandomId(length) {
 
   return randomId;
 }
-module.exports = generateRandomId;
 
 function accessoryPreviewModel(accessory) {
   return {
