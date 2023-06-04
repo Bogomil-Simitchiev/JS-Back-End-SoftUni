@@ -1,4 +1,5 @@
 const Car = require('../models/Car');
+const carPreviewModel = require('../utils/utils').carPreviewModel;
 
 async function getAllCars(query) {
 
@@ -16,30 +17,17 @@ async function getAllCars(query) {
         }
         options.price.$lte = Number(query.to);
     }
-
-    console.log(options);
+    
     const cars = await Car.find(options);
 
-    return cars.map(car => ({
-        name: car.name,
-        description: car.description,
-        imageUrl: car.imageUrl,
-        price: car.price,
-        id: car._id
-    }))
+    return cars.map(carPreviewModel);
 
 }
 
 async function getCarById(id) {
-    const car = await Car.findById(id);
+    const car = await Car.findById(id).populate('accessories');
     if (car) {
-        return ({
-            name: car.name,
-            description: car.description,
-            imageUrl: car.imageUrl,
-            price: car.price,
-            id: car._id
-        });
+        return carPreviewModel(car);
     } else {
         return undefined;
     }
@@ -50,11 +38,22 @@ async function deleteCar(id) {
 }
 
 async function editCar(id, updatedCar) {
-    await Car.findByIdAndUpdate(id, updatedCar);
+    const car = await Car.findById(id);
+    car.name = updatedCar.name;
+    car.description = updatedCar.description;
+    car.imageUrl = updatedCar.imageUrl;
+    car.price = updatedCar.price;
+    car.id = updatedCar.id;
+    await car.save();
 }
 
-async function createCar(data) {
-    const car = new Car(data);
+async function createCar(car) {
+    const currentCar = new Car(car);
+    await currentCar.save();
+}
+async function attachAccessory(carId, accessoryId){
+    const car = await Car.findById(carId);
+    car.accessories.push(accessoryId);
     await car.save();
 }
 
@@ -64,7 +63,8 @@ module.exports = () => (req, res, next) => {
         getCarById,
         createCar,
         deleteCar,
-        editCar
+        editCar,
+        attachAccessory
     }
     
     next();
