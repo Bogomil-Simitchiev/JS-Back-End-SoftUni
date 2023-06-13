@@ -10,19 +10,15 @@ router.post('/', async (req, res) => {
     const info = req.body;
     try {
         if (info.username != '' && info.password != '') {
-            const user = {
-                username: info.username,
-                password: info.password,
-            }
 
-            console.log(user);
+            await req.auth.login(info.username, info.password);
             res.redirect('/');
         } else {
-            res.redirect('/edit');
+            res.redirect('/login');
         }
     } catch (error) {
         console.log(error);
-        res.redirect('/404');
+        res.redirect('/login');
     }
 
 });
