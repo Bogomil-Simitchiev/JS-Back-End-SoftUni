@@ -15,6 +15,7 @@ router.post('/', async (req, res) => {
                 description: info.description,
                 imageUrl: info.imageUrl,
                 price: Number(info.price),
+                owner: req.session.user.id
             }
 
             await req.storage.createCar(car);
