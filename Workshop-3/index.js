@@ -5,6 +5,7 @@ const session = require('express-session');
 const { home } = require('./controllers/home');
 const { about } = require('./controllers/about');
 const { details } = require('./controllers/details');
+const { logout } = require('./controllers/logout');
 const { notFound } = require('./controllers/notFound');
 
 const carService = require('./services/carService');
@@ -19,8 +20,7 @@ const accessoryController = require('./controllers/accessory');
 const attachController = require('./controllers/attach');
 const loginController = require('./controllers/login');
 const registerController = require('./controllers/register');
-
-
+const { isLoggedIn } = require('./utils/utils');
 
 const app = express();
 
@@ -47,12 +47,13 @@ app.use(accessoryService());
 app.get('/', home);
 app.get('/about', about);
 app.get('/details/:id', details);
+app.get('/logout', isLoggedIn() , logout);
 
-app.use('/create', createController);
-app.use('/delete', deleteController);
-app.use('/edit', editController);
-app.use('/accessory', accessoryController);
-app.use('/attach', attachController);
+app.use('/create', isLoggedIn(), createController);
+app.use('/delete', isLoggedIn(), deleteController);
+app.use('/edit', isLoggedIn(), editController);
+app.use('/accessory', isLoggedIn(), accessoryController);
+app.use('/attach', isLoggedIn(), attachController);
 app.use('/login', loginController);
 app.use('/register', registerController);
 
