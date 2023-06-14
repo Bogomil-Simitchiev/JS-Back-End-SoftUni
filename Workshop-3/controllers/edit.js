@@ -6,6 +6,12 @@ router.get('/:id', async (req, res) => {
     const id = req.params.id;
     const car = await req.storage.getCarById(id);
     try {
+
+        if (car.owner!= req.session.user.id) {
+            console.log('User is not the owner!');
+            return res.redirect('/login');
+        }
+
         if (car) {
             res.render('edit', { car });
         } else {
@@ -30,9 +36,12 @@ router.post('/:id', async (req, res) => {
                 price: Number(info.price),
                 id: id,
             }
-
-            await req.storage.editCar(id, car);
-            res.redirect('/');
+            if (await req.storage.editCar(id, car, req.session.user.id)) {
+                res.redirect('/');
+            }else{
+                res.redirect('/login');
+            }
+            
         } else {
             res.redirect('/edit');
         }

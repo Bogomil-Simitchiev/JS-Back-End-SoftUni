@@ -17,7 +17,7 @@ async function getAllCars(query) {
         }
         options.price.$lte = Number(query.to);
     }
-    
+
     const cars = await Car.find(options);
 
     return cars.map(carPreviewModel);
@@ -33,28 +33,49 @@ async function getCarById(id) {
     }
 }
 
-async function deleteCar(id) {
+async function deleteCar(id, ownerId) {
+    const car = await Car.findById(id);
+
+    if (car.owner!=ownerId) {
+        return false;
+    }
+
     await Car.findByIdAndDelete(id);
+
+    return true;
 }
 
-async function editCar(id, updatedCar) {
+async function editCar(id, updatedCar, ownerId) {
     const car = await Car.findById(id);
+
+    if (car.owner != ownerId) {
+        return false;
+    }
     car.name = updatedCar.name;
     car.description = updatedCar.description;
     car.imageUrl = updatedCar.imageUrl;
     car.price = updatedCar.price;
     car.id = updatedCar.id;
+
     await car.save();
+    return true;
 }
 
 async function createCar(car) {
     const currentCar = new Car(car);
     await currentCar.save();
 }
-async function attachAccessory(carId, accessoryId){
+async function attachAccessory(carId, accessoryId, ownerId) {
     const car = await Car.findById(carId);
+
+    if (car.owner!=ownerId) {
+        return false;
+    }
+
     car.accessories.push(accessoryId);
     await car.save();
+
+    return true;
 }
 
 module.exports = () => (req, res, next) => {
@@ -66,6 +87,6 @@ module.exports = () => (req, res, next) => {
         editCar,
         attachAccessory
     }
-    
+
     next();
 }
