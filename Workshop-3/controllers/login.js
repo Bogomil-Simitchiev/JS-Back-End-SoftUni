@@ -9,16 +9,13 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     const info = req.body;
     try {
-        if (info.username != '' && info.password != '') {
+        await req.auth.login(info.username, info.password);
+        res.redirect('/');
 
-            await req.auth.login(info.username, info.password);
-            res.redirect('/');
-        } else {
-            res.redirect('/login');
-        }
-    } catch (error) {
-        console.log(error);
-        res.redirect('/login');
+    } catch (err) {
+        console.log(err);
+        res.locals.errors = [{ msg: err.message }];
+        res.render('login');
     }
 
 });

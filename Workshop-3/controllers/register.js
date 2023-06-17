@@ -9,11 +9,15 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/',
+    body('username').trim(),
+    body('password').trim(),
+    body('repeatPassword').trim(),
     body('username')
-        .notEmpty().withMessage('Username is required!')
-        .isLength({ min: 3 }).withMessage('The length of username must be more than 3 symbols'),
+        .isLength({ min: 5 }).withMessage('Username must be at least 5 symbols').bail()
+        .isAlphanumeric().withMessage('Only english letters and digits'),
     body('password')
-        .notEmpty().withMessage('Password is required!'),
+        .isLength({ min: 8 }).withMessage('Password must be at least 8 symbols').bail()
+        .isAlphanumeric().withMessage('Only english letters and digits'),
     body('repeatPassword').custom((value, { req }) => {
         return value == req.body.password;
     }).withMessage('Passwords don\'t match'),
@@ -27,9 +31,20 @@ router.post('/',
             }
             await req.auth.register(info.username, info.password);
             res.redirect('/');
-        } catch (error) {
-            console.log(error);
-            res.redirect('/register');
+        } catch (errors) {
+            console.log(errors);
+            if (errors.code == 11000) {
+                res.render('register', {
+                    errors: [{ msg: 'Username already exists' }], data: {
+                        username: req.body.username
+                    }
+                });
+            }
+            res.render('register', {
+                errors, data: {
+                    username: req.body.username
+                }
+            });
         }
 
     });
