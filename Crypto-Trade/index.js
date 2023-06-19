@@ -1,10 +1,21 @@
 const express = require('express');
 const hbs = require('express-handlebars');
 const bodyParser = require('body-parser')
+const session = require('express-session');
+const init = require('./models/index');
 
 const app = express();
 
+//database
+init();
+
 //setup
+app.use(session({
+    secret: 'super secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: 'auto' }
+}))
 app.engine('hbs', hbs.create({
     extname: '.hbs'
 }).engine);
@@ -25,6 +36,11 @@ const detailsController = require('./controllers/details');
 const loginController = require('./controllers/login');
 const registerController = require('./controllers/register');
 const searchController = require('./controllers/search');
+
+//middlewares
+const authMiddleware = require('./middlewares/auth');
+
+app.use(authMiddleware());
 
 app.get('/', homeController);
 app.get('/catalog', catalogController);
