@@ -28,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //controllers
 const homeController = require('./controllers/home');
 const catalogController = require('./controllers/catalog');
+const logoutController = require('./controllers/logout');
 const notFoundController = require('./controllers/notFound');
 
 const createController = require('./controllers/create');
@@ -44,6 +45,7 @@ app.use(authMiddleware());
 
 app.get('/', homeController);
 app.get('/catalog', catalogController);
+app.get('/logout', logoutController);
 app.use('/create', createController);
 app.use('/edit', editController);
 app.use('/details', detailsController);
