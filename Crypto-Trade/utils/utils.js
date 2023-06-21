@@ -16,7 +16,8 @@ function cryptoPreview(offer) {
     price: offer.price,
     id: offer._id,
     payment: offer.payment,
-    owner: offer.owner
+    owner: offer.owner,
+    buyers: offer.buyers
   }
   return model;
 }

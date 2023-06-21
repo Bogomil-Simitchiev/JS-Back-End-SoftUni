@@ -51,7 +51,7 @@ app.use(cryptoMiddleware());
 app.get('/', homeController);
 app.get('/catalog', catalogController);
 app.get('/logout', isLoggedIn(), logoutController);
-app.get('/buy/:id', buyController);
+app.get('/buy/:id', isLoggedIn(), buyController);
 app.use('/details', detailsController);
 app.use('/create', isLoggedIn(), createController);
 app.use('/edit', isLoggedIn(), editController);

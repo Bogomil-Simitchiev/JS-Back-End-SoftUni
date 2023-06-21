@@ -13,13 +13,14 @@
     <header class="header">
         <nav>
             <img src="../../static/images/logo.png" class="logo">
-            <ul>
+            <ul class="my-list">
                 <li><a href="/">Home</a></li>
                 <li><a href="/catalog">All Crypto</a></li>
                 {{#if hasUser}}
                 <li><a href="/search">Search</a></li>
                 <li><a href="/create">Create Offer</a></li>
                 <li><a href="/logout">Logout</a></li>
+                <li><a>Hello, {{user.email}}</a></li>
                 {{else}}
                 <li><a href="/login">Login</a></li>
                 <li><a href="/register">Register</a></li>
