@@ -3,8 +3,8 @@ module.exports = async (req, res) => {
     const ownerId = req.session.user.id;
 
     try {
-        if (await req.storage.buyCrypto(cryptoId, ownerId)) {
-            res.redirect(`/details/${cryptoId}`);
+        if (await req.storage.deleteOffer(cryptoId, ownerId)) {
+            res.redirect('/catalog');
         } else {
             res.redirect('/login');
         }

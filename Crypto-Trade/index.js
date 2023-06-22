@@ -33,6 +33,7 @@ const catalogController = require('./controllers/catalog');
 const logoutController = require('./controllers/logout');
 const notFoundController = require('./controllers/notFound');
 const buyController = require('./controllers/buy');
+const deleteController = require('./controllers/delete');
 
 const createController = require('./controllers/create');
 const editController = require('./controllers/edit');
@@ -52,6 +53,7 @@ app.get('/', homeController);
 app.get('/catalog', catalogController);
 app.get('/logout', isLoggedIn(), logoutController);
 app.get('/buy/:id', isLoggedIn(), buyController);
+app.get('/delete/:id', isLoggedIn(), deleteController)
 app.use('/details', detailsController);
 app.use('/create', isLoggedIn(), createController);
 app.use('/edit', isLoggedIn(), editController);

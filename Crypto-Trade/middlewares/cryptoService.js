@@ -32,12 +32,41 @@ async function buyCrypto(cryptoId, ownerId) {
     return true;
 }
 
+async function editOffer(id, updatedOffer, ownerId) {
+    const offer = await Crypto.findById(id);
+
+    if (offer.owner != ownerId) {
+        return false;
+    }
+    offer.name = updatedOffer.name;
+    offer.description = updatedOffer.description;
+    offer.imageUrl = updatedOffer.imageUrl;
+    offer.price = updatedOffer.price;
+    offer.payment = updatedOffer.payment;
+    offer.id = updatedOffer.id;
+
+    await offer.save();
+    return true;
+}
+async function deleteOffer(id, ownerId){
+    const offer = await Crypto.findById(id);
+
+    if (offer.owner!=ownerId) {
+        return false;
+    }
+
+    await Crypto.findByIdAndDelete(id);
+    return true;
+}
+
 module.exports = () => (req, res, next) => {
     req.storage = {
         createCryptoOffer,
         getAllCryptos,
         getCryptoById,
-        buyCrypto
+        buyCrypto,
+        editOffer,
+        deleteOffer
     }
 
     next();
