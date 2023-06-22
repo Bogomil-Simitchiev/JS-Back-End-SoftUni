@@ -1,7 +1,7 @@
 <section class="crypto-search">
     <h1>Search</h1>
 
-    <form class="search-form" action="#" method="">
+    <form class="search-form" action="/search" method="POST">
         <input type="text" class="search-coin" name="" placeholder="Search here...">
         <select id="payment" name="">
             <option value="crypto-wallet">Crypto Wallet</option>
@@ -13,24 +13,16 @@
     </form>
 
     <div class="search-result">
-        <div class="search-list">
-            <div class="coin">
-                <div class="coin-img">
-                    <img src="./static/images/ethereum.png">
-                </div>
-                <div class="coin-info">
-                    <h1>Ethereum</h1>
-                    <p><span>Price: </span>$2,338.55</p>
-                    <p><span>Payment: </span>debit-card</p>
-                </div>
-
-                <a href="/details" class="btn-details">Details</a>
-            </div>
+    {{#if offers}}
+    <div class="search-list">
+        {{#each offers}}
+        {{> offerPreview}}
+        {{/each}}
+        {{else}}
+        <div class="no-match">
+            <p>No match was found!</p>
         </div>
-
     </div>
-
-    <!-- <div class="no-match">
-                <p>No match was found!</p>
-            </div> -->
+    {{/if}}
+    </div>
 </section>

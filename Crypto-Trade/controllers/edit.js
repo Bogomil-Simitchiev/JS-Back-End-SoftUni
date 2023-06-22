@@ -15,7 +15,7 @@ router.get('/:id', async (req, res) => {
             console.log('User is not the owner!');
             return res.redirect('/login');
         }
-        res.render('edit', { offer });
+        res.render('edit', { offer, title: offer.name });
 
     } catch (error) {
         console.log(error);
