@@ -1,11 +1,10 @@
-<!-- In case of error, you should display div with class "errorContainer" -->
-<!-- You can choose to display the first error or all of them (error message/s in your opinion) -->
-
-<!-- <div>
-            <div class="errorContainer">
-                <p>Error</p>
-            </div>
-        </div> -->
+{{#if errors}}
+<div class="errorContainer">
+    {{#each errors}}
+    <p>{{msg}}</p>
+    {{/each}}
+</div>
+{{/if}}
 <section id="create-container">
     <div class="create-container-info">
         <h1>Create Announcement</h1>

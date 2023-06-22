@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-require('./User');
 require('./Crypto');
 
 
@@ -12,7 +11,6 @@ async function initialize() {
         await mongoose.connect(connectionString, {
             useUnifiedTopology: true,
             useNewUrlParser: true,
-            autoIndex: false
         });
 
         console.log('Database connected');
