@@ -48,15 +48,29 @@ async function editOffer(id, updatedOffer, ownerId) {
     await offer.save();
     return true;
 }
-async function deleteOffer(id, ownerId){
+async function deleteOffer(id, ownerId) {
     const offer = await Crypto.findById(id);
 
-    if (offer.owner!=ownerId) {
+    if (offer.owner != ownerId) {
         return false;
     }
 
     await Crypto.findByIdAndDelete(id);
     return true;
+}
+
+async function getCryptosBySearch(body) {
+    let options = {};
+
+    if (body.name) {
+        options.name = new RegExp(body.name, 'i');
+    }
+    if (body.payment) {
+        options.payment = new RegExp(body.payment, 'i');
+    }
+
+    const cryptos = await Crypto.find(options);
+    return cryptos.map(cryptoPreview);
 }
 
 module.exports = () => (req, res, next) => {
@@ -66,7 +80,8 @@ module.exports = () => (req, res, next) => {
         getCryptoById,
         buyCrypto,
         editOffer,
-        deleteOffer
+        deleteOffer,
+        getCryptosBySearch
     }
 
     next();

@@ -60,13 +60,15 @@ router.post('/:id',
             }
 
         } catch (errors) {
+            const offer = await req.storage.getCryptoById(id);
             if (errors.code == 11000) {
                 res.render('edit', {
                     errors: [{ msg: 'Email already exists' }], offer: {
                         name: req.body.name,
                         description: req.body.description,
                         imageUrl: req.body.imageUrl,
-                        price: req.body.price
+                        price: req.body.price,
+                        id: offer.id
                     }
                 });
             }
@@ -75,7 +77,8 @@ router.post('/:id',
                     name: req.body.name,
                     description: req.body.description,
                     imageUrl: req.body.imageUrl,
-                    price: req.body.price
+                    price: req.body.price,
+                    id: offer.id
                 }
             });
         }
