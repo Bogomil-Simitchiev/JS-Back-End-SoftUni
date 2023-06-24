@@ -25,7 +25,7 @@ app.use('/static', express.static('static'));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 //utils
-const { isLoggedIn } = require('./utils/utils');
+const { isLoggedIn, isGuest } = require('./utils/utils');
 
 //controllers
 const homeController = require('./controllers/home');
@@ -57,8 +57,8 @@ app.get('/delete/:id', isLoggedIn(), deleteController)
 app.use('/details', detailsController);
 app.use('/create', isLoggedIn(), createController);
 app.use('/edit', isLoggedIn(), editController);
-app.use('/login', loginController);
-app.use('/register', registerController);
+app.use('/login', isGuest(), loginController);
+app.use('/register', isGuest(), registerController);
 app.use('/search', isLoggedIn(), searchController);
 
 app.all('*', notFoundController);

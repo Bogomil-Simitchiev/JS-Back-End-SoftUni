@@ -27,7 +27,7 @@ router.post('/',
             res.redirect('/');
 
         } catch (errors) {
-            if (errors.message == 'Incorrect username or password!') {
+            if (errors.message == 'Incorrect email or password!') {
                 res.locals.errors = [{ msg: errors.message }];
                 res.render('login');
             }else{

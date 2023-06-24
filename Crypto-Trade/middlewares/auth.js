@@ -25,7 +25,7 @@ async function login(session, email, password) {
         }
         return true;
     } else {
-        throw new Error('Incorrect username or password!');
+        throw new Error('Incorrect email or password!');
     }
 }
 
