@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
     <!-- Do not forget to change the path to the css file -->
     <link rel="stylesheet" href="../static/css/style.css">
@@ -30,6 +31,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/trips">Shared Trips</a>
                     </li>
+                    {{#if hasUser}}
                     <!-- Logged users -->
                     <li class="nav-item">
                         <a class="nav-link" href="/offer">Offer Trip</a>
@@ -38,8 +40,9 @@
                         <a class="nav-link" href="/profile">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/logout">Logout as [ test@abv.bg ]</a>
+                        <a class="nav-link" href="/logout">Logout as {{user.email}}</a>
                     </li>
+                    {{else}}
                     <!-- Guest users -->
                     <li class="nav-item">
                         <a class="nav-link" href="/login">Login</a>
@@ -47,13 +50,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/register">Register</a>
                     </li>
+                    {{/if}}
                 </ul>
             </div>
         </div>
     </nav>
 
     {{{body}}}
-   
+
 
     <footer id="sticky-footer" class="bg-dark">
         <div class="container">
