@@ -1,4 +1,4 @@
-const { isGuest } = require('../middlewares/guards');
+const { isGuest, isUser } = require('../middlewares/guards');
 const { register, login } = require('../services/user');
 
 const router = require('express').Router();
@@ -48,7 +48,7 @@ router.post('/login', isGuest(), async (req, res) => {
     }
 })
 
-router.get('/logout', (req, res) => {
+router.get('/logout', isUser(), (req, res) => {
     delete req.session.user;
     res.redirect('/');
 })

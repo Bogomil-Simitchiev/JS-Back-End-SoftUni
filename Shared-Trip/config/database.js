@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 require('../model/User');
+require('../model/Trip');
 
 const dbName = 'sharedtrip'
 

@@ -18,20 +18,7 @@ function isGuest() {
     }
 }
 
-function isOwner() {
-    return function (req, res, next) {
-        const userId = req.session.user?._id;
-        if (req.locals.data.owner == userId) {
-            next();
-        } else {
-            res.redirect('/login');
-        }
-
-    }
-}
-
 module.exports = {
     isUser,
     isGuest,
-    isOwner
 }
