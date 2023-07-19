@@ -1,8 +1,6 @@
 const User = require('../model/User');
 const { hash, compare } = require('bcrypt');
 
-
-
 async function register(email, password, gender) {
     const existing = await getUserByEmail(email);
 

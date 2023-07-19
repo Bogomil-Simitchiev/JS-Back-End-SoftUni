@@ -25,6 +25,7 @@ router.post('/register', isGuest(), async (req, res) => {
 
     } catch (error) {
         console.log(error);
+        res.redirect('/register');
 
     }
 })
@@ -44,7 +45,7 @@ router.post('/login', isGuest(), async (req, res) => {
 
     } catch (error) {
         console.log(error);
-
+        res.redirect('/login');
     }
 })
 
