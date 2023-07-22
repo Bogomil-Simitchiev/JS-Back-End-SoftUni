@@ -1,6 +1,7 @@
 const { isUser } = require('../middlewares/guards');
 
-const { createOffer, getAllOffers } = require('../services/trip');
+const { createOffer, getAllOffers, getOfferById } = require('../services/trip');
+const { getUserById } = require('../services/user');
 
 const router = require('express').Router();
 
@@ -33,6 +34,23 @@ router.post('/offer', isUser(), async (req, res) => {
 router.get('/trips', async (req, res) => {
     const offers = await getAllOffers();
     res.render('shared-trips', { title: 'Trips', offers });
+})
+
+router.get('/details/:id', async (req, res) => {
+    const isThereUser = req.session.user ? true : false;
+    const offer = await getOfferById(req.params.id);
+    const ownerOfTheOffer = await getUserById(offer.owner);
+    const isUserTheCreator = ownerOfTheOffer._id == req.session.user?._id;
+    let availableSeats = offer.seats - offer.buddies.length > 0;
+    let currentSeats = offer.seats - offer.buddies.length;
+
+    const didUserJoinedTheTrip = offer.buddies.find(buddy => buddy == req.session.user?.id);
+    console.log(didUserJoinedTheTrip);
+
+    res.render('trip-details', {
+        title: 'Details', offer, ownerOfTheOffer,
+        isThereUser, isUserTheCreator, availableSeats, currentSeats: 0
+    });
 })
 
 module.exports = router;

@@ -42,7 +42,12 @@ async function getUserByEmail(email) {
     return user;
 }
 
+async function getUserById(userId) {
+    return await User.findById(userId).lean();
+}
+
 module.exports = {
     register,
-    login
+    login,
+    getUserById
 }

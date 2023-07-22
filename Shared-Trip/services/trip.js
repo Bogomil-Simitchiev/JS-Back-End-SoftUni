@@ -13,8 +13,13 @@ async function getAllOffersForCurrentUser(userId) {
     return await Trip.find({ owner: userId }).lean();
 }
 
+async function getOfferById(id) {
+    return await Trip.findById(id).lean();
+}
+
 module.exports = {
     createOffer,
     getAllOffers,
-    getAllOffersForCurrentUser
+    getAllOffersForCurrentUser,
+    getOfferById
 }
