@@ -9,6 +9,10 @@ async function getAllOffers() {
     return await Trip.find().lean();
 }
 
+async function getOfferAndBuddies(id) {
+    return await Trip.findById(id).populate('buddies').lean();
+}
+
 async function getAllOffersForCurrentUser(userId) {
     return await Trip.find({ owner: userId }).lean();
 }
@@ -27,12 +31,51 @@ async function deleteOfferById(id, ownerId) {
     await Trip.findByIdAndDelete(id);
     return true;
 }
+async function editOffer(id, updatedOffer, ownerId) {
+    const offer = await Trip.findById(id);
 
+    if (offer.owner != ownerId) {
+        return false;
+    }
+    offer.start = updatedOffer.start;
+    offer.end = updatedOffer.end;
+    offer.date = updatedOffer.date;
+    offer.time = updatedOffer.time;
+    offer.carImage = updatedOffer.carImage;
+    offer.carBrand = updatedOffer.carBrand;
+    offer.seats = updatedOffer.seats;
+    offer.price = updatedOffer.price;
+    offer.description = updatedOffer.description;
+    offer.owner = updatedOffer.owner;
+
+
+    await offer.save();
+    return true;
+}
+
+async function joinTrip(tripId, joinerId) {
+    const trip = await Trip.findById(tripId);
+
+    if (trip.owner == joinerId) {
+        return false;
+    }
+    if (trip.buddies.includes(joinerId)) {
+        return false;
+    }
+
+    trip.buddies.push(joinerId);
+    await trip.save();
+
+    return true;
+}
 
 module.exports = {
     createOffer,
     getAllOffers,
     getAllOffersForCurrentUser,
     getOfferById,
-    deleteOfferById
+    deleteOfferById,
+    editOffer,
+    joinTrip,
+    getOfferAndBuddies
 }
