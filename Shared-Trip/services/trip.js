@@ -17,9 +17,22 @@ async function getOfferById(id) {
     return await Trip.findById(id).lean();
 }
 
+async function deleteOfferById(id, ownerId) {
+    const offer = await Trip.findById(id);
+
+    if (offer.owner != ownerId) {
+        return false;
+    }
+
+    await Trip.findByIdAndDelete(id);
+    return true;
+}
+
+
 module.exports = {
     createOffer,
     getAllOffers,
     getAllOffersForCurrentUser,
-    getOfferById
+    getOfferById,
+    deleteOfferById
 }
