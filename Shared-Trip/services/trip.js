@@ -53,13 +53,16 @@ async function editOffer(id, updatedOffer, ownerId) {
     return true;
 }
 
-async function joinTrip(tripId, joinerId) {
+async function joinTrip(tripId, joinerId, availableSeats, currentSeats) {
     const trip = await Trip.findById(tripId);
 
     if (trip.owner == joinerId) {
         return false;
     }
     if (trip.buddies.includes(joinerId)) {
+        return false;
+    }
+    if (availableSeats >= currentSeats) {
         return false;
     }
 

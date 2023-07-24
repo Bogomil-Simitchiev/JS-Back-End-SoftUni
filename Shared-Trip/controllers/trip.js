@@ -25,9 +25,17 @@ router.post('/offer', isUser(), async (req, res) => {
     try {
         await createOffer(offer);
         res.redirect('/trips');
-    } catch (error) {
-        console.log(error);
-        res.redirect('/404');
+
+    } catch (errors) {
+
+        if (errors.errors) {
+            let messages = Object.values(errors.errors).map(m => Object.assign({ msg: m.message }));
+            res.locals.errors = messages;
+            res.render('trip-create', { title: 'Create offer trip', data: offer });
+        } else {
+            res.locals.errors = [{ msg: errors.message }];
+            res.render('trip-create', { title: 'Create offer trip', data: offer });
+        }
     }
 })
 
@@ -80,9 +88,10 @@ router.get('/edit/:id', isUser(), async (req, res) => {
 })
 
 router.post('/edit/:id', isUser(), async (req, res) => {
-    const id = req.params.id;
+    const offerId = req.params.id;
     const info = req.body;
     const offer = {
+        _id: offerId,
         start: info.start,
         end: info.end,
         date: info.date,
@@ -97,23 +106,30 @@ router.post('/edit/:id', isUser(), async (req, res) => {
     }
     try {
 
-        if (await editOffer(id, offer, req.session.user._id)) {
-            res.redirect(`/details/${id}`);
+        if (await editOffer(offerId, offer, req.session.user._id)) {
+            res.redirect(`/details/${offerId}`);
         } else {
             res.redirect('/404');
         }
-    } catch (error) {
-        console.log(error);
-        res.redirect('/404');
+    } catch (errors) {
+        if (errors.errors) {
+            let messages = Object.values(errors.errors).map(m => Object.assign({ msg: m.message }));
+            res.locals.errors = messages;
+            res.render('trip-edit', { title: 'Edit', offer });
+        } else {
+            res.locals.errors = [{ msg: errors.message }];
+            res.render('trip-edit', { title: 'Edit', offer });
+        }
     }
 })
 
 router.get('/join/:id', isUser(), async (req, res) => {
     const id = req.params.id;
     const user = req.session.user;
+    const offer = await getOfferById(id);
 
     try {
-        if (await joinTrip(id, user._id) && await putTripOnList(id, user._id)) {
+        if (await joinTrip(id, user._id, offer.seats, offer.buddies.length) && await putTripOnList(id, user._id)) {
             res.redirect(`/details/${id}`);
         } else {
             res.redirect('/404');

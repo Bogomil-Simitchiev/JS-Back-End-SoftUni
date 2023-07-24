@@ -11,9 +11,8 @@ router.get('/register', isGuest(), (req, res) => {
 
 router.post('/register', isGuest(), async (req, res) => {
     try {
-        if (req.body.password.trim() == '') {
-            throw new Error('Password is required!');
-
+        if (req.body.password.trim().length < 4) {
+            throw new Error('Password must be at least 4 characters long');
         }
         if (req.body.password != req.body.repass) {
             throw new Error('Passwords don\'t match!');
@@ -23,10 +22,14 @@ router.post('/register', isGuest(), async (req, res) => {
         req.session.user = user;
         res.redirect('/');
 
-    } catch (error) {
-        console.log(error);
-        res.redirect('/register');
-
+    } catch (errors) {
+        if (errors.errors) {
+            res.locals.errors = [{ msg: 'Email should be valid' }];
+            res.render('register', { title: 'Register' });
+        } else {
+            res.locals.errors = [{ msg: errors.message }];
+            res.render('register', { title: 'Register' });
+        }
     }
 })
 
@@ -38,14 +41,16 @@ router.get('/login', isGuest(), (req, res) => {
 
 router.post('/login', isGuest(), async (req, res) => {
     try {
-
+        if (req.body.password.trim().length < 4) {
+            throw new Error('Password must be at least 4 characters long');
+        }
         const user = await login(req.body.email, req.body.password);
         req.session.user = user;
         res.redirect('/');
 
-    } catch (error) {
-        console.log(error);
-        res.redirect('/login');
+    } catch (errors) {
+        res.locals.errors = [{ msg: errors.message }];
+        res.render('login', { title: 'Login' });
     }
 })
 
@@ -53,6 +58,5 @@ router.get('/logout', isUser(), (req, res) => {
     delete req.session.user;
     res.redirect('/');
 })
-
 
 module.exports = router;

@@ -9,9 +9,10 @@ router.get('/', (req, res) => {
 
 router.get('/profile', isUser(), async (req, res) => {
     const isMaleOrFemale = res.locals.user.gender;
-    const user = res.locals.user;
+    const user = req.session.user;
     const offersForCurrentUser = await getAllOffersForCurrentUser(user._id);
 
     res.render('profile', { title: 'Home page', isMaleOrFemale, user, offersForCurrentUser });
 })
+
 module.exports = router;
