@@ -26,7 +26,7 @@ const tripSchema = new Schema({
     carBrand: {
         type: String,
         required: true,
-        minLength: [4, 'Car brand should be at least 4 characters long']
+        minLength: [3, 'Car brand should be at least 4 characters long']
     },
     seats: {
         type: Number,

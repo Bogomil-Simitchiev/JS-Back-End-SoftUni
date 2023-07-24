@@ -62,7 +62,7 @@ async function joinTrip(tripId, joinerId, availableSeats, currentSeats) {
     if (trip.buddies.includes(joinerId)) {
         return false;
     }
-    if (availableSeats >= currentSeats) {
+    if (availableSeats <= currentSeats) {
         return false;
     }
 
